@@ -1,0 +1,141 @@
+EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
+ 
+test.exe -- emu8086 assembler version: 4.08  
+ 
+[ 18/01/04  --  00:07:39 ] 
+ 
+===================================================================================================
+[LINE]     LOC: MACHINE CODE                          SOURCE
+===================================================================================================
+ 
+[   1]        :                                       DATA SEGMENT
+[   2]        :                                       DATA ENDS
+[   3]        :                                       
+[   4]        :                                       STACK SEGMENT
+[   5]    0000: 00 00 00 00 00 00 00 00 00 00 00 00   DW 100 DUP (?)
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00 00 00 00 00 
+                00 00 00 00 00 00 00 00             
+[   6]        :                                       STACK ENDS
+[   7]        :                                       
+[   8]        :                                       CODE SEGMENT
+[   9]        :                                       ASSUME CS:CODE, DS:DATA, SS:STACK
+[  10]    00D0:                                       START:
+[  11]    00D0: B8 00 00                              	MOV AX,DATA
+[  12]    00D3: 8E D8                                 	MOV DS,AX
+[  13]    00D5: FA                                    	CLI
+[  14]    00D6: B8 00 00                              	MOV AX,0
+[  15]    00D9: 8E C0                                 	MOV ES,AX
+[  16]    00DB: BE 80 01                              	MOV SI,60H*4	    ;设置中断向量
+[  17]    00DE: B8 46 00                              	MOV AX,offset int0
+[  18]        :                                       	
+[  19]    00E1: 26 89 04                              	MOV ES:[SI],AX
+[  20]    00E4: 8C C8                                 	MOV AX,CS	        ;seg int0
+[  21]    00E6: 26 89 44 02                           	MOV ES:[SI+2],AX    ;初始化8259
+[  22]    00EA: B0 13                                 MOV AL,00010011b
+[  23]    00EC: BA 00 04                              	MOV DX,400H
+[  24]    00EF: EE                                    	out DX,AL
+[  25]        :                                       	
+[  26]    00F0: B0 60                                 	MOV al,060H
+[  27]    00F2: BA 02 04                              	MOV DX,402H
+[  28]    00F5: EE                                    	OUT DX,AL
+[  29]        :                                       
+[  30]    00F6: B0 1B                                 	MOV al,1BH
+[  31]    00F8: EE                                    	out DX,AL
+[  32]        :                                       
+[  33]    00F9: BA 02 04                              MOV DX,402H
+[  34]    00FC: B0 00                                 MOV AL,00H          ;OCW1,八个中断全部开放
+[  35]    00FE: EE                                    OUT DX,AL
+[  36]        :                                       
+[  37]    00FF: BA 00 04                              MOV DX,400H
+[  38]    0102: B0 60                                 MOV AL,60H          ;OCW2,非特殊EOI结束中断
+[  39]    0104: EE                                    OUT DX,AL           ;完成8259初始化
+[  40]        :                                       
+[  41]        :                                       
+[  42]    0105: BA 00 08                              mov dx,0800H
+[  43]    0108: EC                                    	IN AL,DX
+[  44]    0109: BA 00 06                              mov  dx,0600H
+[  45]    010C: EE                                    	OUT DX,AL
+[  46]    010D: FB                                    	STI
+[  47]        :                                       
+[  48]    010E:                                       li:	
+[  49]    010E: BA 00 04                              MOV DX,400H
+[  50]    0111: B0 60                                 MOV AL,60H          ;60H有中断向量
+[  51]    0113: EE                                    OUT DX,AL
+[  52]    0114: EB F8                                 	JMP li
+[  53]        :                                       
+[  54]    0116:                                       int0 proc
+[  55]    0116: FA                                    CLI
+[  56]    0117: BA 00 08                              	MOV DX,0800H
+[  57]    011A: EC                                    	IN AL,DX
+[  58]    011B: BA 00 06                              MOV DX,0600H
+[  59]    011E: EE                                    	OUT DX,AL
+[  60]    011F: BA 00 04                              	MOV DX,400H
+[  61]    0122: B0 60                                 MOV AL,60H
+[  62]    0124: EE                                    OUT DX,AL
+[  63]    0125: FB                                    	STI
+[  64]    0126: CF                                    	IRET
+[  65]        :                                       int0 endp
+[  66]        :                                       
+[  67]        :                                       CODE ENDS
+[  68]        :                                       END START
+[  69]        :                                       
+[  70]        :                                       
+ 
+===================================================================================================
+ 
+EXE HEADER - bytes from 0000 to 01FF inclusive.
+
+0000: 4D      -   exe signature (M)
+0001: 5A      -   exe signature (Z)
+0002: 27      -   bytes on last page (l.byte)
+0003: 01      -   bytes on last page (h.byte)
+0004: 02      -   512 byte pages in file (l.byte)
+0005: 00      -   512 byte pages in file (h.byte)
+0006: 01      -   relocations (l.byte)
+0007: 00      -   relocations (h.byte)
+0008: 20      -   paragraphs in header (l.byte)
+0009: 00      -   paragraphs in header (h.byte)
+000A: 00      -   minimum memory (l.byte)
+000B: 00      -   minimum memory (h.byte)
+000C: FF      -   maximum memory (l.byte)
+000D: FF      -   maximum memory (h.byte)
+000E: 00      -   SS - stack segment (l.byte)
+000F: 00      -   SS - stack segment (h.byte)
+0010: C8      -   SP - stack pointer (l.byte)
+0011: 00      -   SP - stack pointer (h.byte)
+0012: CC      -   check sum (l.byte)
+0013: FE      -   check sum (h.byte)
+0014: 00      -   IP - instruction pointer (l.byte)
+0015: 00      -   IP - instruction pointer (h.byte)
+0016: 0D      -   CS - code segment (l.byte)
+0017: 00      -   CS - code segment (h.byte)
+0018: 1E      -   relocation table adress (l.byte)
+0019: 00      -   relocation table adress (h.byte)
+001A: 00      -   overlay number (l.byte)
+001B: 00      -   overlay number (h.byte)
+001C: 01      -   signature (l.byte)
+001D: 00      -   signature (h.byte)
+001E: 01      -   relocation table - offset inside segment (l.byte)
+001F: 00      -   relocation table - offset inside segment (h.byte)
+0020: 0D      -   relocation table - segment anchor (l.byte)
+0021: 00      -   relocation table - segment anchor (h.byte)
+0022 to 01FF  -   reserved relocation area  (00) 
+
+
+
+
+===================================================================================================
